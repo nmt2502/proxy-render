@@ -11,7 +11,7 @@ const ALLOW_LIST = [
   "https://allgametx.onrender.com/api/sicbo",
   "https://luckywingugu.onrender.com/luck/md5",
   "https://luckywingugu.onrender.com/luck8/tx",
-  "https://lc79md5-lun8.onrender.com/lc79/md5",
+  "https://allgametx.onrender.com/api/lc",
   "https://lc79md5-lun8.onrender.com/lc79/tx"
 ];
 
