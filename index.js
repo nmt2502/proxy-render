@@ -7,8 +7,8 @@ app.use(cors());
 
 // ✅ DANH SÁCH API ĐƯỢC PHÉP
 const ALLOW_LIST = [
-  "https://api-sun-2026.onrender.com/api/sun/binhoi",
-  "https://allgametx.onrender.com/api/sicbo",
+  "https://apidulieugame.onrender.com/api/dudoan/SUNWIN",
+  "https://apidulieugame.onrender.com/api/dudoan/SICBO_SUN",
   "https://luckywingugu.onrender.com/luck/md5",
   "https://luckywingugu.onrender.com/luck8/tx",
   "https://allgametx.onrender.com/api/lc",
