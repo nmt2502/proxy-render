@@ -12,7 +12,7 @@ const ALLOW_LIST = [
   "https://luckywingugu.onrender.com/luck/md5",
   "https://luckywingugu.onrender.com/luck8/tx",
   "https://allgametx.onrender.com/api/lc",
-  "https://lc79md5-lun8.onrender.com/lc79/tx",
+  "https://apidulieugame.onrender.com/api/dudoan/LC79_THUONG",
   "https://apibcrvip.onrender.com/api/ban"
 ];
 
