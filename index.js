@@ -22,6 +22,7 @@ const ALLOW_LIST = [
   "https://apidulieugame.onrender.com/api/dudoan/HIT_MD5",
   "https://apidulieugame.onrender.com/api/dudoan/B52_TX",
   "https://apidulieugame.onrender.com/api/dudoan/B52_MD5",
+  "https://apitest-e7gt.onrender.com/api/sunwin",
 
   "https://apidulieugame.onrender.com/check/api/all",
   "https://apibcrvip.onrender.com/api/ban"
