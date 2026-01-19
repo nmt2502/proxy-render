@@ -9,11 +9,19 @@ app.use(cors());
 const ALLOW_LIST = [
   "https://apidulieugame.onrender.com/api/dudoan/SUNWIN",
   "https://apidulieugame.onrender.com/api/dudoan/SICBO_SUN",
+  "https://apidulieugame.onrender.com/api/dudoan/SICBO_HITCLUB",
   "https://apidulieugame.onrender.com/api/dudoan/LUCK_MD5",
-  "https://luckywingugu.onrender.com/luck8/tx",
+  "https://apidulieugame.onrender.com/api/dudoan/LUCK_THUONG",
   "https://apidulieugame.onrender.com/api/dudoan/LC79_MD5",
   "https://apidulieugame.onrender.com/api/dudoan/LC79_THUONG",
   "https://apidulieugame.onrender.com/api/dudoan/68GB_MD5",
+  "https://apidulieugame.onrender.com/api/dudoan/789_THUONG",
+  "https://apidulieugame.onrender.com/api/dudoan/BET_THUONG",
+  "https://apidulieugame.onrender.com/api/dudoan/BET_MD5",
+  "https://apidulieugame.onrender.com/api/dudoan/HIT_THUONG",
+  "https://apidulieugame.onrender.com/api/dudoan/HIT_MD5",
+  "https://apidulieugame.onrender.com/api/dudoan/B52_TX",
+  "https://apidulieugame.onrender.com/api/dudoan/B52_MD5",
 
   "https://apidulieugame.onrender.com/check/api/all",
   "https://apibcrvip.onrender.com/api/ban"
