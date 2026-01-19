@@ -9,7 +9,7 @@ app.use(cors());
 const ALLOW_LIST = [
   "https://apidulieugame.onrender.com/api/dudoan/SUNWIN",
   "https://apidulieugame.onrender.com/api/dudoan/SICBO_SUN",
-  "https://luckywingugu.onrender.com/luck/md5",
+  "https://apidulieugame.onrender.com/api/dudoan/LUCK_MD5",
   "https://luckywingugu.onrender.com/luck8/tx",
   "https://apidulieugame.onrender.com/api/dudoan/LC79_MD5",
   "https://apidulieugame.onrender.com/api/dudoan/LC79_THUONG",
