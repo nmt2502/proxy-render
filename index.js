@@ -2,41 +2,57 @@ import express from "express";
 import fetch from "node-fetch";
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.get("/api/sun", async (req, res) => {
-  try {
-    const r = await fetch("https://api-qk87.onrender.com/api/sun");
-    const data = await r.json();
-
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.json(data);
-  } catch {
-    res.status(500).json({ error: true });
-  }
+/* ===== CORS ===== */
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+  next();
 });
 
-app.get("/api/bet", async (req, res) => {
+/* ===== HÀM PROXY CHUNG ===== */
+async function proxy(res, url) {
   try {
-    const r = await fetch("https://apidulieugame.onrender.com/api/dudoan/BET_THUONG");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
+
+    const r = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+
+    if (!r.ok) {
+      return res.status(502).json({
+        error: true,
+        message: "API gốc lỗi",
+        status: r.status
+      });
+    }
+
     const data = await r.json();
-
-    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json(data);
-  } catch {
-    res.status(500).json({ error: true });
+
+  } catch (err) {
+    res.status(500).json({
+      error: true,
+      message: "Proxy lỗi / API chết"
+    });
   }
-});
+}
 
-app.get("/api/68gb", async (req, res) => {
-  try {
-    const r = await fetch("https://apidulieugame.onrender.com/api/dudoan/68GB_MD5");
-    const data = await r.json();
+/* ===== ROUTES ===== */
+app.get("/api/sun", (req, res) =>
+  proxy(res, "https://api-qk87.onrender.com/api/sun")
+);
 
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.json(data);
-  } catch {
-    res.status(500).json({ error: true });
-  }
-});
+app.get("/api/bet", (req, res) =>
+  proxy(res, "https://apidulieugame.onrender.com/api/dudoan/BET_THUONG")
+);
 
-app.listen(3000);
+app.get("/api/68gb", (req, res) =>
+  proxy(res, "https://apidulieugame.onrender.com/api/dudoan/68GB_MD5")
+);
+
+/* ===== START ===== */
+app.listen(PORT, () =>
+  console.log("Proxy running on port", PORT)
+);
