@@ -18,21 +18,23 @@ const ALLOW_PREFIX = [
 
 // ===== PROXY =====
 app.get("/proxy", async (req, res) => {
-  const url = req.query.url;
+  let url = req.query.url;
 
   if (!url) {
     return res.json({ error: "Missing url" });
   }
 
-  // ❌ CHẶN LINK KHÔNG ĐÚNG PREFIX
-  const isAllowed = ALLOW_PREFIX.some(prefix =>
-    url.startsWith(prefix)
+  // ✅ QUAN TRỌNG
+  url = decodeURIComponent(url);
+
+  const allow = ALLOW_LIST.some(allowUrl =>
+    url.startsWith(allowUrl)
   );
 
-  if (!isAllowed) {
+  if (!allow) {
     return res.json({
       error: "Blocked",
-      allow_prefix: ALLOW_PREFIX
+      url
     });
   }
 
@@ -44,17 +46,13 @@ app.get("/proxy", async (req, res) => {
       }
     });
 
-    const contentType = r.headers.get("content-type") || "";
-
-    res.set("Content-Type", contentType);
-
     const text = await r.text();
     res.send(text);
-
   } catch (e) {
     res.json({ error: e.message });
   }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
