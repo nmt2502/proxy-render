@@ -5,30 +5,18 @@ import cors from "cors";
 const app = express();
 app.use(cors());
 
-// ✅ DANH SÁCH API ĐƯỢC PHÉP
-const ALLOW_LIST = [
-  "https://apidulieugame.onrender.com/api/dudoan/SUNWIN",
-  "https://apidulieugame.onrender.com/api/dudoan/SICBO_SUN",
-  "https://apidulieugame.onrender.com/api/dudoan/SICBO_HITCLUB",
-  "https://apidulieugame.onrender.com/api/dudoan/LUCK_MD5",
-  "https://apidulieugame.onrender.com/api/dudoan/LUCK_THUONG",
-  "https://apidulieugame.onrender.com/api/dudoan/LC79_MD5",
-  "https://apidulieugame.onrender.com/api/dudoan/LC79_THUONG",
-  "https://apidulieugame.onrender.com/api/dudoan/68GB_MD5",
-  "https://apidulieugame.onrender.com/api/dudoan/789_THUONG",
-  "https://apidulieugame.onrender.com/api/dudoan/BET_THUONG",
-  "https://apidulieugame.onrender.com/api/dudoan/BET_MD5",
-  "https://apidulieugame.onrender.com/api/dudoan/HIT_THUONG",
-  "https://apidulieugame.onrender.com/api/dudoan/HIT_MD5",
-  "https://apidulieugame.onrender.com/api/dudoan/B52_TX",
-  "https://apidulieugame.onrender.com/api/dudoan/B52_MD5",
-  "https://apitest-e7gt.onrender.com/api/sunwin",
+/* ===== DANH SÁCH API ĐƯỢC PHÉP (PREFIX) ===== */
+const ALLOW_PREFIX = [
+  "https://apidulieugame.onrender.com/api/dudoan/",
+  "https://apidulieugame.onrender.com/check/api/",
+  "https://apitest-e7gt.onrender.com/api/",
 
-  "https://apidulieugame.onrender.com/check/api/all",
-  "https://apibcrvip.onrender.com/api/ban"
+  // ✅ BCR VIP (CHO PHÉP /api/ban/c01 → c99)
+  "https://apibcrvip.onrender.com/api/ban/",
+  "https://bcrvip.onrender.com/api/ban/"
 ];
 
-// ✅ PROXY
+// ===== PROXY =====
 app.get("/proxy", async (req, res) => {
   const url = req.query.url;
 
@@ -36,11 +24,15 @@ app.get("/proxy", async (req, res) => {
     return res.json({ error: "Missing url" });
   }
 
-  // ❌ CHẶN LINK KHÔNG NẰM TRONG LIST
-  if (!ALLOW_LIST.includes(url)) {
+  // ❌ CHẶN LINK KHÔNG ĐÚNG PREFIX
+  const isAllowed = ALLOW_PREFIX.some(prefix =>
+    url.startsWith(prefix)
+  );
+
+  if (!isAllowed) {
     return res.json({
       error: "Blocked",
-      allow: ALLOW_LIST
+      allow_prefix: ALLOW_PREFIX
     });
   }
 
@@ -52,8 +44,13 @@ app.get("/proxy", async (req, res) => {
       }
     });
 
+    const contentType = r.headers.get("content-type") || "";
+
+    res.set("Content-Type", contentType);
+
     const text = await r.text();
     res.send(text);
+
   } catch (e) {
     res.json({ error: e.message });
   }
