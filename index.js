@@ -9,7 +9,7 @@ app.use(cors());
 const ALLOW_PREFIX = [
   "https://apidulieugame.onrender.com/api/dudoan/",
   "https://apidulieugame.onrender.com/check/api/",
-  "https://apitest-e7gt.onrender.com/api/",
+  "https://sun-proxy.onrender.com/api/sun",
 
   // ✅ BCR VIP (CHO PHÉP /api/ban/c01 → c99)
   "https://apibcrvip.onrender.com/api/ban/",
