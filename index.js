@@ -11,13 +11,26 @@ app.use((req, res, next) => {
   next();
 });
 
-/* ===== PROXY CHUNG ===== */
-async function proxy(req, res, targetUrl) {
+/* ===== ROUTE TEST ===== */
+app.get("/", (req, res) => {
+  res.json({
+    status: "OK",
+    message: "Proxy running"
+  });
+});
+
+/* ===== PROXY API SEXY ===== */
+app.get("/sexy/:table", async (req, res) => {
+  const table = req.params.table.toUpperCase();
+
+  // ⚠️ DÒNG NÀY BẮT BUỘC DÙNG BACKTICK
+  const url = https://apibcrdudoan.onrender.com/sexy/${table};
+
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000); // 10s
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
-    const r = await fetch(targetUrl, {
+    const r = await fetch(url, {
       signal: controller.signal,
       headers: {
         "User-Agent": "Mozilla/5.0",
@@ -35,69 +48,19 @@ async function proxy(req, res, targetUrl) {
       });
     }
 
-    const text = await r.text();
-
-    // parse an toàn
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      return res.status(500).json({
-        error: true,
-        message: "API không phải JSON"
-      });
-    }
-
-    res.json(data);
-
-  } catch (err) {
-    res.status(500).json({
-      error: true,
-      message: "Proxy timeout / API chết",
-      detail: err.message
-    });
-  }
-}
-
-/* ===== ROUTE PROXY SEXY ===== */
-app.get("/sexy/:table", async (req, res) => {
-  const table = req.params.table.toUpperCase();
-  const url = https://apibcrdudoan.onrender.com/sexy/${table};
-
-  try {
-    const r = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "application/json"
-      }
-    });
-
-    if (!r.ok) {
-      return res.status(502).json({
-        error: true,
-        message: "API gốc lỗi",
-        status: r.status
-      });
-    }
-
     const data = await r.json();
     res.json(data);
 
   } catch (err) {
     res.status(500).json({
       error: true,
-      message: "Proxy lỗi",
+      message: "Proxy lỗi / API chết",
       detail: err.message
     });
   }
 });
 
-/* ===== TEST ===== */
-app.get("/", (req, res) => {
-  res.send("PROXY OK");
-});
-
-/* ===== START ===== */
+/* ===== START SERVER ===== */
 app.listen(PORT, () => {
-  console.log("🚀 Proxy running on port", PORT);
+  console.log("Proxy running on port", PORT);
 });
