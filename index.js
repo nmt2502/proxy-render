@@ -11,13 +11,13 @@ app.use((req, res, next) => {
   next();
 });
 
-/* ===== PROXY ===== */
-async function proxy(res, url) {
+/* ===== PROXY CHUNG ===== */
+async function proxy(req, res, targetUrl) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10s
 
-    const r = await fetch(url, {
+    const r = await fetch(targetUrl, {
       signal: controller.signal,
       headers: {
         "User-Agent": "Mozilla/5.0",
@@ -30,38 +30,48 @@ async function proxy(res, url) {
     if (!r.ok) {
       return res.status(502).json({
         error: true,
-        status: r.status,
-        message: "API gốc lỗi"
+        message: "API gốc lỗi",
+        status: r.status
       });
     }
 
     const text = await r.text();
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
 
-    if (start === -1 || end === -1) {
-      throw new Error("Invalid JSON");
+    // parse an toàn
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return res.status(500).json({
+        error: true,
+        message: "API không phải JSON"
+      });
     }
 
-    res.json(JSON.parse(text.slice(start, end + 1)));
+    res.json(data);
 
   } catch (err) {
     res.status(500).json({
       error: true,
-      message: "Proxy lỗi",
+      message: "Proxy timeout / API chết",
       detail: err.message
     });
   }
 }
 
-/* ===== ROUTE ===== */
+/* ===== ROUTE PROXY SEXY ===== */
 app.get("/sexy/:table", (req, res) => {
   const table = req.params.table.toUpperCase();
-  const url = https://apibcrdudoan.onrender.com/sexy/${table};
-  proxy(res, url);
+  const target = https://apibcrdudoan.onrender.com/sexy/${table};
+  proxy(req, res, target);
+});
+
+/* ===== TEST ===== */
+app.get("/", (req, res) => {
+  res.send("PROXY OK");
 });
 
 /* ===== START ===== */
 app.listen(PORT, () => {
-  console.log("✅ Proxy running on port", PORT);
+  console.log("🚀 Proxy running on port", PORT);
 });
