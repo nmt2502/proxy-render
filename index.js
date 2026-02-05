@@ -24,7 +24,7 @@ app.get("/sexy/:table", async (req, res) => {
   const table = req.params.table.toUpperCase();
 
   // ⚠️ DÒNG NÀY BẮT BUỘC DÙNG BACKTICK
-  const url = https://apibcrdudoan.onrender.com/sexy/${table};
+  const url = https://apibcrdudoan.onrender.com/sexy/${table}`;
 
   try {
     const controller = new AbortController();
