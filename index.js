@@ -60,10 +60,36 @@ async function proxy(req, res, targetUrl) {
 }
 
 /* ===== ROUTE PROXY SEXY ===== */
-app.get("/sexy/:table", (req, res) => {
+app.get("/sexy/:table", async (req, res) => {
   const table = req.params.table.toUpperCase();
-  const target = https://apibcrdudoan.onrender.com/sexy/${table};
-  proxy(req, res, target);
+  const url = https://apibcrdudoan.onrender.com/sexy/${table};
+
+  try {
+    const r = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
+      }
+    });
+
+    if (!r.ok) {
+      return res.status(502).json({
+        error: true,
+        message: "API gốc lỗi",
+        status: r.status
+      });
+    }
+
+    const data = await r.json();
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({
+      error: true,
+      message: "Proxy lỗi",
+      detail: err.message
+    });
+  }
 });
 
 /* ===== TEST ===== */
