@@ -11,20 +11,14 @@ app.use((req, res, next) => {
   next();
 });
 
-/* ===== PROXY ROUTE ===== */
-/*
-  Ví dụ gọi:
-  https://proxy-render-l6ku.onrender.com/sexy/C01
-*/
+/* ===== PROXY SEXY ===== */
 app.get("/sexy/:table", async (req, res) => {
   const { table } = req.params;
-
-  // ⚠️ CHỖ NÀY TRƯỚC BẠN SAI (THIẾU DẤU )
-  const url = https://apibcrdudoan.onrender.com/sexy/${table}`;
+  const url = https://apibcrdudoan.onrender.com/sexy/${table};
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
     const r = await fetch(url, { signal: controller.signal });
     clearTimeout(timeout);
@@ -38,19 +32,17 @@ app.get("/sexy/:table", async (req, res) => {
     }
 
     const data = await r.json();
-
-    // 👉 CHỈ TRẢ JSON – KHÔNG CHỈNH SỬA
     res.json(data);
 
   } catch (err) {
     res.status(500).json({
       error: true,
-      message: "Proxy lỗi hoặc API gốc chết"
+      message: "Proxy lỗi / timeout"
     });
   }
 });
 
 /* ===== START ===== */
-app.listen(PORT, () => {
-  console.log("Proxy running on port", PORT);
-});
+app.listen(PORT, () =>
+  console.log("Proxy running on port", PORT)
+);
