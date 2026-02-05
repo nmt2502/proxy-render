@@ -17,7 +17,14 @@ async function proxy(res, url) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
-    const r = await fetch(url, { signal: controller.signal });
+    const r = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
+      }
+    });
+
     clearTimeout(timeout);
 
     if (!r.ok) {
@@ -28,31 +35,35 @@ async function proxy(res, url) {
       });
     }
 
-    const data = await r.json();
+    const text = await r.text();
+
+    // đề phòng API trả rác trước JSON
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
+    if (start === -1 || end === -1) {
+      throw new Error("Invalid JSON");
+    }
+
+    const data = JSON.parse(text.slice(start, end + 1));
     res.json(data);
 
   } catch (err) {
     res.status(500).json({
       error: true,
-      message: "Proxy lỗi / API chết"
+      message: "Proxy lỗi / API chết",
+      detail: err.message
     });
   }
 }
 
-/* ===== ROUTES ===== */
-app.get("/api/sun", (req, res) =>
-  proxy(res, "https://api-qk87.onrender.com/api/sun")
-);
-
-app.get("/api/bet", (req, res) =>
-  proxy(res, "https://apidulieugame.onrender.com/api/dudoan/BET_THUONG")
-);
-
-app.get("/api/68gb", (req, res) =>
-  proxy(res, "https://apidulieugame.onrender.com/api/dudoan/68GB_MD5")
-);
+/* ===== ROUTE SEXY (C01–C16) ===== */
+app.get("/sexy/:table", (req, res) => {
+  const table = req.params.table.toUpperCase();
+  const url = https://apibcrdudoan.onrender.com/sexy/${table};
+  proxy(res, url);
+});
 
 /* ===== START ===== */
 app.listen(PORT, () =>
-  console.log("Proxy running on port", PORT)
+  console.log("✅ Proxy running on port", PORT)
 );
