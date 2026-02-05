@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 /* ===== PROXY SEXY ===== */
 app.get("/sexy/:table", async (req, res) => {
   const { table } = req.params;
-  const url = https://apibcrdudoan.onrender.com/sexy/${table};
+  const url = `https://apibcrdudoan.onrender.com/sexy/${table}`;
 
   try {
     const controller = new AbortController();
